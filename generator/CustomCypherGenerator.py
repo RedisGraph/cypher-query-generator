@@ -100,7 +100,7 @@ class CustomCypherGenerator(CypherGenerator):
         self.enter_rule(current)
 
         # If we're in an updating context, we must have exactly one reltype and one direction.
-        in_update = in_node_type(parent, 'oC_UpdatingClause')
+        in_update = in_node_type(parent, 'oC_UpdatingClause') or in_node_type(parent, 'oC_UpdatingStartClause')
         if in_update:
             ltr = random.randint(0, 1)
             if ltr:
@@ -288,3 +288,18 @@ class CustomCypherGenerator(CypherGenerator):
         self.exit_rule(current)
         return current
     oC_ProjectionItem.min_depth = 4
+
+    @depthcontrol
+    def oC_With(self, parent=None):
+        current = UnparserRule(name='oC_With', parent=parent)
+        self.enter_rule(current)
+        self.SP(parent=current)
+        self.WITH(parent=current)
+        self.oC_ProjectionBody(parent=current)
+        if self.max_depth >= 6:
+            for _ in self.model.quantify(current, 0, min=0, max=1):
+                self.SP(parent=current)
+                self.oC_Where(parent=current)
+        self.exit_rule(current)
+        return current
+    oC_With.min_depth = 4
