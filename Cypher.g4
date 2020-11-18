@@ -107,8 +107,8 @@ SET : ('S') ('E') ('T')  ;
 
 oC_SetItem
        :  ( oC_PropertyExpression SP '=' SP rG_Expression )
-           | ( oC_Variable SP '=' SP rG_Expression )
-           | ( oC_Variable SP '+=' SP rG_Expression )
+           /* | ( oC_Variable SP '=' SP rG_Expression ) */
+           /* | ( oC_Variable SP '+=' SP rG_Expression ) */
            ;
 
 oC_Delete
