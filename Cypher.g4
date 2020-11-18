@@ -135,7 +135,7 @@ oC_YieldItem
          :  ( oC_ProcedureResultField SP AS SP )? oC_Variable ;
 
 oC_With
-    :  SP WITH oC_ProjectionBody ( SP oC_Where )? ;
+    :  WITH oC_ProjectionBody ( SP oC_Where )? ;
 
 WITH : ('W') ('I') ('T') ('H')  ;
 
@@ -434,7 +434,7 @@ oC_Variable
         :  oC_SymbolicName ;
 
 StringLiteral
-             :  ( '\'' ( StringLiteral_0 )* '\'' )
+             :  ( '\'' ( 'LIT'[0-9]) '\'' )
                  ;
 
 oC_NumberLiteral
@@ -607,6 +607,4 @@ oC_Dash
 fragment EscapedSymbolicName_0 : ( 'var'[1-9] ) ;
 
 fragment SPACE : [ ] ;
-
-fragment StringLiteral_0 : ('L') ('I') ('T');
 
