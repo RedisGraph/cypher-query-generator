@@ -152,7 +152,7 @@ class CypherGenerator(Generator):
         current = UnparserRule(name='oC_UpdatingClause', parent=parent)
         self.enter_rule(current)
         choice = self.model.choice(current, 0, [0 if [
-                                   6, 5, 5, 6][i] > self.max_depth else w for i, w in enumerate([1, 1, 1, 1])])
+                                   6, 5, 5, 7][i] > self.max_depth else w for i, w in enumerate([1, 1, 1, 1])])
         if choice == 0:
             self.oC_Create(parent=current)
         elif choice == 1:
@@ -276,7 +276,7 @@ class CypherGenerator(Generator):
         self.MERGE(parent=current)
         self.SP(parent=current)
         self.oC_PatternPart(parent=current)
-        if self.max_depth >= 7:
+        if self.max_depth >= 8:
             for _ in self.model.quantify(current, 0, min=0, max=inf):
                 self.SP(parent=current)
                 self.oC_MergeAction(parent=current)
@@ -302,7 +302,7 @@ class CypherGenerator(Generator):
         current = UnparserRule(name='oC_MergeAction', parent=parent)
         self.enter_rule(current)
         choice = self.model.choice(
-            current, 0, [0 if [6, 6][i] > self.max_depth else w for i, w in enumerate([1, 1])])
+            current, 0, [0 if [7, 7][i] > self.max_depth else w for i, w in enumerate([1, 1])])
         if choice == 0:
             self.ON(parent=current)
             self.SP(parent=current)
@@ -317,7 +317,7 @@ class CypherGenerator(Generator):
             self.oC_Set(parent=current)
         self.exit_rule(current)
         return current
-    oC_MergeAction.min_depth = 6
+    oC_MergeAction.min_depth = 7
 
     @depthcontrol
     def ON(self, parent=None):
@@ -361,14 +361,14 @@ class CypherGenerator(Generator):
         self.SET(parent=current)
         self.SP(parent=current)
         self.oC_SetItem(parent=current)
-        if self.max_depth >= 5:
+        if self.max_depth >= 6:
             for _ in self.model.quantify(current, 0, min=0, max=inf):
                 UnlexerRule(src=',', parent=current)
                 self.SP(parent=current)
                 self.oC_SetItem(parent=current)
         self.exit_rule(current)
         return current
-    oC_Set.min_depth = 5
+    oC_Set.min_depth = 6
 
     @depthcontrol
     def SET(self, parent=None):
@@ -385,29 +385,14 @@ class CypherGenerator(Generator):
     def oC_SetItem(self, parent=None):
         current = UnparserRule(name='oC_SetItem', parent=parent)
         self.enter_rule(current)
-        choice = self.model.choice(current, 0, [
-                                   0 if [5, 4, 4][i] > self.max_depth else w for i, w in enumerate([1, 1, 1])])
-        if choice == 0:
-            self.oC_PropertyExpression(parent=current)
-            self.SP(parent=current)
-            UnlexerRule(src='=', parent=current)
-            self.SP(parent=current)
-            self.rG_Expression(parent=current)
-        elif choice == 1:
-            self.oC_Variable(parent=current)
-            self.SP(parent=current)
-            UnlexerRule(src='=', parent=current)
-            self.SP(parent=current)
-            self.rG_Expression(parent=current)
-        elif choice == 2:
-            self.oC_Variable(parent=current)
-            self.SP(parent=current)
-            UnlexerRule(src='+=', parent=current)
-            self.SP(parent=current)
-            self.rG_Expression(parent=current)
+        self.oC_PropertyExpression(parent=current)
+        self.SP(parent=current)
+        UnlexerRule(src='=', parent=current)
+        self.SP(parent=current)
+        self.rG_Expression(parent=current)
         self.exit_rule(current)
         return current
-    oC_SetItem.min_depth = 4
+    oC_SetItem.min_depth = 5
 
     @depthcontrol
     def oC_Delete(self, parent=None):
@@ -558,7 +543,6 @@ class CypherGenerator(Generator):
     def oC_With(self, parent=None):
         current = UnparserRule(name='oC_With', parent=parent)
         self.enter_rule(current)
-        self.SP(parent=current)
         self.WITH(parent=current)
         self.oC_ProjectionBody(parent=current)
         if self.max_depth >= 6:
@@ -2044,9 +2028,9 @@ class CypherGenerator(Generator):
         current = UnlexerRule(name='StringLiteral', parent=parent)
         self.enter_rule(current)
         UnlexerRule(src='\'', parent=current)
-        if self.max_depth >= 1:
-            for _ in self.model.quantify(current, 0, min=0, max=inf):
-                self.StringLiteral_0(parent=current)
+        UnlexerRule(src='LIT', parent=current)
+        UnlexerRule(src=self.model.charset(
+            current, 0, self._charsets[1]), parent=current)
         UnlexerRule(src='\'', parent=current)
         self.exit_rule(current)
         return current
@@ -2135,42 +2119,6 @@ class CypherGenerator(Generator):
     DecimalInteger.min_depth = 1
 
     @depthcontrol
-    def HexLetter(self, parent=None):
-        current = UnlexerRule(name='HexLetter', parent=parent)
-        self.enter_rule(current)
-        choice = self.model.choice(current, 0, [0 if [
-                                   0, 0, 0, 0, 0, 0][i] > self.max_depth else w for i, w in enumerate([1, 1, 1, 1, 1, 1])])
-        if choice == 0:
-            UnlexerRule(src='A', parent=current)
-        elif choice == 1:
-            UnlexerRule(src='B', parent=current)
-        elif choice == 2:
-            UnlexerRule(src='C', parent=current)
-        elif choice == 3:
-            UnlexerRule(src='D', parent=current)
-        elif choice == 4:
-            UnlexerRule(src='E', parent=current)
-        elif choice == 5:
-            UnlexerRule(src='F', parent=current)
-        self.exit_rule(current)
-        return current
-    HexLetter.min_depth = 0
-
-    @depthcontrol
-    def HexDigit(self, parent=None):
-        current = UnlexerRule(name='HexDigit', parent=parent)
-        self.enter_rule(current)
-        choice = self.model.choice(
-            current, 0, [0 if [2, 1][i] > self.max_depth else w for i, w in enumerate([1, 1])])
-        if choice == 0:
-            self.Digit(parent=current)
-        elif choice == 1:
-            self.HexLetter(parent=current)
-        self.exit_rule(current)
-        return current
-    HexDigit.min_depth = 1
-
-    @depthcontrol
     def Digit(self, parent=None):
         current = UnlexerRule(name='Digit', parent=parent)
         self.enter_rule(current)
@@ -2225,49 +2173,10 @@ class CypherGenerator(Generator):
     def oC_DoubleLiteral(self, parent=None):
         current = UnparserRule(name='oC_DoubleLiteral', parent=parent)
         self.enter_rule(current)
-        choice = self.model.choice(
-            current, 0, [0 if [3, 3][i] > self.max_depth else w for i, w in enumerate([1, 1])])
-        if choice == 0:
-            self.ExponentDecimalReal(parent=current)
-        elif choice == 1:
-            self.RegularDecimalReal(parent=current)
+        self.RegularDecimalReal(parent=current)
         self.exit_rule(current)
         return current
     oC_DoubleLiteral.min_depth = 3
-
-    @depthcontrol
-    def ExponentDecimalReal(self, parent=None):
-        current = UnlexerRule(name='ExponentDecimalReal', parent=parent)
-        self.enter_rule(current)
-        choice = self.model.choice(current, 0, [
-                                   0 if [2, 2, 2][i] > self.max_depth else w for i, w in enumerate([1, 1, 1])])
-        if choice == 0:
-            if self.max_depth >= 0:
-                for _ in self.model.quantify(current, 0, min=1, max=inf):
-                    self.Digit(parent=current)
-        elif choice == 1:
-            if self.max_depth >= 0:
-                for _ in self.model.quantify(current, 1, min=1, max=inf):
-                    self.Digit(parent=current)
-            UnlexerRule(src='.', parent=current)
-            if self.max_depth >= 0:
-                for _ in self.model.quantify(current, 2, min=1, max=inf):
-                    self.Digit(parent=current)
-        elif choice == 2:
-            UnlexerRule(src='.', parent=current)
-            if self.max_depth >= 0:
-                for _ in self.model.quantify(current, 3, min=1, max=inf):
-                    self.Digit(parent=current)
-        UnlexerRule(src='E', parent=current)
-        if self.max_depth >= 0:
-            for _ in self.model.quantify(current, 4, min=0, max=1):
-                UnlexerRule(src='-', parent=current)
-        if self.max_depth >= 0:
-            for _ in self.model.quantify(current, 5, min=1, max=inf):
-                self.Digit(parent=current)
-        self.exit_rule(current)
-        return current
-    ExponentDecimalReal.min_depth = 2
 
     @depthcontrol
     def RegularDecimalReal(self, parent=None):
@@ -2593,7 +2502,7 @@ class CypherGenerator(Generator):
         self.enter_rule(current)
         UnlexerRule(src='var', parent=current)
         UnlexerRule(src=self.model.charset(
-            current, 0, self._charsets[1]), parent=current)
+            current, 0, self._charsets[2]), parent=current)
         self.exit_rule(current)
         return current
     EscapedSymbolicName_0.min_depth = 0
@@ -2603,26 +2512,16 @@ class CypherGenerator(Generator):
         current = UnlexerRule(name='SPACE', parent=parent)
         self.enter_rule(current)
         UnlexerRule(src=self.model.charset(
-            current, 0, self._charsets[2]), parent=current)
+            current, 0, self._charsets[3]), parent=current)
         self.exit_rule(current)
         return current
     SPACE.min_depth = 0
-
-    @depthcontrol
-    def StringLiteral_0(self, parent=None):
-        current = UnlexerRule(name='StringLiteral_0', parent=parent)
-        self.enter_rule(current)
-        UnlexerRule(src='L', parent=current)
-        UnlexerRule(src='I', parent=current)
-        UnlexerRule(src='T', parent=current)
-        self.exit_rule(current)
-        return current
-    StringLiteral_0.min_depth = 0
 
     default_rule = oC_Cypher
 
     _charsets = {
         0: list(chain.from_iterable([range(32, 127)])),
-        1: list(chain.from_iterable([range(49, 58)])),
-        2: list(chain.from_iterable([range(32, 33)])),
+        1: list(chain.from_iterable([range(48, 58)])),
+        2: list(chain.from_iterable([range(49, 58)])),
+        3: list(chain.from_iterable([range(32, 33)])),
     }
