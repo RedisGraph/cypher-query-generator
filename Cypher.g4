@@ -457,20 +457,6 @@ DecimalInteger
                   | ( NonZeroDigit ( Digit )* )
                   ;
 
-HexLetter
-         :  ('A')
-             | ('B')
-             | ('C')
-             | ('D')
-             | ('E')
-             | ('F')
-             ;
-
-HexDigit
-        :  Digit
-            | HexLetter
-            ;
-
 Digit
      :  ZeroDigit
          | NonZeroDigit
@@ -492,12 +478,7 @@ ZeroDigit
          :  '0' ;
 
 oC_DoubleLiteral
-             :  ExponentDecimalReal
-                 | RegularDecimalReal
-                 ;
-
-ExponentDecimalReal
-                   :  ( ( Digit )+ | ( ( Digit )+ '.' ( Digit )+ ) | ( '.' ( Digit )+ ) ) ('E') '-'? ( Digit )+ ;
+             :  RegularDecimalReal ;
 
 RegularDecimalReal
                   :  ( Digit )* '.' ( Digit )+ ;
