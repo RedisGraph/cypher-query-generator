@@ -228,7 +228,7 @@ oC_Properties
           :  oC_MapLiteral ;
 
 oC_RelationshipTypes
-                 :  ':' oC_RelTypeName ( '|' ':'? oC_RelTypeName )* ;
+                 :  ':' oC_RelTypeName ( '|' oC_RelTypeName )* ;
 
 oC_NodeLabels
           :  oC_NodeLabel ;
